@@ -1,8 +1,22 @@
 /*
   ========================================
+  Media Queries
+  ========================================
+*/
+
+@media only screen and (max-width: 820px) {
+    .background-image-right img,
+    .background-image-left img {
+        display: none;
+    }
+}
+
+/*
+  ========================================
   Border-box Setup
   ========================================
 */
+
 *,
 *:before,
 *:after {
