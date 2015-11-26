@@ -1,0 +1,285 @@
+/*
+  ========================================
+  Border-box Setup
+  ========================================
+*/
+*,
+*:before,
+*:after {
+  -webkit-box-sixing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/*
+  ========================================
+  Clearfix
+  ========================================
+*/
+
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+.clearfix {
+  clear: both;
+  *zoom: 1;
+}
+
+#kitten {
+  height: 100px;
+}
+
+/*
+  ========================================
+  Custom styles
+  ========================================
+*/
+
+body {
+  color: black;
+  font: 300 16px/22px "Lato", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+small {
+  font-size: 10px;
+}
+
+strong {
+  font-weight: 700;
+}
+
+a:hover {
+  color: #B70000;
+}
+
+.container a:hover {
+  color: #B70000;
+}
+
+/*
+  ========================================
+  Header
+  ========================================
+*/
+
+header {
+  padding-top: 10px;
+  height: 250px;
+  border: 3px solid rgb(211, 211, 211);
+  text-align: center;
+}
+
+header h1 {
+  color: black;
+  padding-top: 60px;
+  font-size: 45px;
+  font-family: "Rock Salt", "Arial";
+}
+
+header h1 img {
+  height: 50px;
+  position: relative;
+  top: 10px;
+}
+
+nav li {
+  display: inline-block;
+  padding: 0 15px;
+}
+
+nav li a {
+  text-decoration: none;
+  color: rgb(211, 211, 211)
+}
+
+header span {
+  letter-spacing: 1.3em;
+  color: rgb(211, 211, 211);
+  font-size: 11px;
+  position: relative;
+  bottom: -75px;
+
+
+}
+
+/*
+  ========================================
+  Footer
+  ========================================
+*/
+
+footer {
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  text-transform: uppercase;
+  border: 3px solid rgb(211, 211, 211);
+}
+
+footer p {
+  letter-spacing: 2.5em;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+footer span {
+  letter-spacing: 1.5em;
+  font-size: 11px;
+  color: rgb(122, 122, 122)
+}
+
+/*
+  ========================================
+  Posts View on Homepage
+  ========================================
+*/
+
+.container {
+  width: 100%;
+  text-align: center;
+  background: url('http://i64.tinypic.com/2drfeq8.png');
+  padding: 35px;
+}
+
+.post {
+  padding: 30px;
+  width: 500px;
+  margin: 15px auto;
+  background-color: white;
+  border: 1px dotted black;
+}
+
+.post-name {
+  line-height: 15px;
+}
+
+.post-name h2 {
+  font-size: 20px;
+}
+
+.post-name a {
+  color: black;
+  text-decoration: none;
+}
+
+.post-preview {
+  color: #888;
+  font-size: 15px;
+}
+
+.background-image-right img {
+  position: absolute;
+  height: 200px;
+  right: -60px;
+  padding-top: 30px
+}
+
+.background-image-left img {
+  position: absolute;
+  height: 200px;
+  left: -60px;
+  padding-top: 30px;
+}
+
+/*
+  ========================================
+  Individual Post View
+  ========================================
+*/
+
+.post-title {
+  padding: 20px;
+  width: 60%;
+  margin: 15px auto;
+}
+
+.post-title h1 {
+  font-size: 36px;
+  font-family: "Rock Salt";
+}
+
+.post-title p {
+  padding-top: 15px;
+  font-size: 14px;
+}
+
+.album-artwork {
+  height: 300px;
+  wigth: 300px;
+  padding: 15px;
+}
+
+.album-info {
+  margin-top: 15px;
+}
+
+.album-title {
+  font-size: 28px;
+}
+
+.release-date {
+  font-size: 14px;
+  color: #888;
+  }
+
+.post-content {
+  width: 60%;
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: center;
+  background-color: white;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.favorites {
+  text-align: left;
+  padding-left: 100px;
+  margin-bottom: 10px;
+}
+
+.post-content iframe {
+  padding: 30px;
+}
+
+/*
+  ========================================
+  About Page
+  ========================================
+*/
+
+.bio {
+  margin: 0 auto;
+  width: 60%;
+}
+
+.bio-pic {
+  height: 280px;
+  float: left;
+  padding: 30px;
+}
+
+.bio h2 {
+  letter-spacing: .75em;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 40px;
+  font-family: "Rock Salt";
+  padding-bottom: 15px;
+}
+
+.bio p {
+  text-align: left;
+  padding: 15px;
+}
+
+.bio a {
+  text-decoration: none;
+  color: #888;
+}
