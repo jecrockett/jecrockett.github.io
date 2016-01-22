@@ -1,0 +1,101 @@
+---
+title: Redirecting Users
+layout: post
+date: 2016-01-21
+---
+
+<h1>Redirects: Get Your User to the Right Page</h1>
+<h3 class="author">James Crockett</h3>
+<div class="post-content">
+  <p>I'm a new programmer, and so I'll preface this by admitting that I've probably broken a few precious naming conventions here through my efforts to redirect users to the right place in my "Little Shop" project. Still, I want to illustrate the learning and problem solving process I experienced delving into this problem.</p>
+  <p>The first time my group realized we might encounter conditional redirects was when we were redirecting users after they added an item to their cart. Though we allowed users to browse items by category, if they filtered to see only food items, for example, and then added one to their cart, the filter disappeared and the user was back on the 'items index.' "Not a big deal," we said at the time, they'll manage.</p>
+  <p>It wasn't long before we ran into a stickier situation that required more than a "let's look the other way." When unregistered users attempted to checkout their order, they were redirected to a login page with the option to create an account -- perfect. After logging in, however, most users see their "user dashboard" with personal and account informaion, and we wanted to put these newly registered "ready to buy" users back on their cart page to continue checking out. That's where the fun began.</p>
+  <p>At first, being the novice I am, I threw all of the logic in controllers, but hey I just wanted to get it working and then make it pretty later. Logically I needed to accomplish just a few steps: 1) If they aren't a registered user when they try to check out, save that information somehow, 2) When they login or create an account, check for that information and redirect based on it, 3) After redirecting delete the saved information so the new redirect doesn't live in perpetuity.
+  </p>
+  <p>The first challenge was fairly simple and required just a bit of Googling. I knew I would use the session functionality to save some sort of flag or indication that the user had attempted to checkout their order. First, I tried:
+  </p>
+  <pre><code>
+    session[:referrer] = request.referrer
+    => "www.example.com/cart"
+  </code></pre>
+  <p>
+    That had me saving "www.example.com/cart" as the referring page, however, and I really only wanted to save the path part at the end. By passing that address into URI, effectively making it an object, and calling `.path` on it, I was able to extract and save the "/cart" portion into the session before redirecting the user to the login page:
+  </p>
+  <pre><code>
+    session[:referrer] = URL(request.referrer).path
+    => "/cart"
+  </code></pre>
+
+  <p>
+    Step two involved checking for that information in the session after a user sucessfully logs in or creates a new account, and trumping the default redirect in those situations. As I began adding this logic to the 'sessions controller,' I realized I would need to extract it and my first thought was to create a module. Not, ultimately, the best thought, but we'd recently been learning to use POROs and how to extract logic from controllers, so I went for it:
+  </p>
+  <pre><code>
+    module RedirectHelper
+      self.redirect(different_redirect, default_redirect)
+        if different_redirect
+          different_redirect
+        else
+          default_redirect
+        end
+      end
+    end
+  </code></pre>
+  <p>
+    Then, from the 'sessions#create' or 'users#new' methods, I passed the info to the module:
+  </p>
+  <pre><code>
+    RedirectHelper.redirect(session[:referrer], dashboard_path)
+  </code></pre>
+  <p>
+    Anyway, the module code quickly evolved, becoming simpler and simpler:
+  </p>
+  <pre><code>
+    module RedirectHelper
+      self.redirect(different_redirect, default_redirect)
+        different_redirect ? different_redirect : default_redirect
+      end
+    end
+  </code></pre>
+  <p>
+    Shortly followed by:
+  </p>
+  <pre><code>
+    module RedirectHelper
+      self.redirect(different_redirect, default_redirect)
+        different_redirect || default_redirect
+      end
+    end
+  </code></pre>
+  <p>
+    When I completed the module, I was a little disappointed. That's it? I created a separate module to hold a single piece of OR logic? I tried to rationalize it to myself, a bit too in love with my own idea: "I'll need it in other places though. This is just one time I need to conditionally redirect but now I can access this from any object that needs it."
+  </p>
+  <p>
+    Well, who needs it? Controllers, because they redirect the users. And might there be an object already in existence who's sole job it is to support the other controllers? Ah...right. Goodbye, my sweet module. Be well. I deleted my module, and threw the method into my application controller:
+  </p>
+  <pre><code>
+    def redirect_path(referrer, default_redirect)
+      referrer || default_redirect
+    end
+  </code></pre>
+  <p>
+    There was one other little trick to this, and that was to remember to clear the saved session value once it has been used. That is, I don't want someone to now redirect in perpetuity to the cart page until their session is cleared. I currently handle this as follows:
+  </p>
+  <pre><code>
+    flash[:notice] = "Logged in as #{@user.first_name}"
+    path = redirect_path(session[:referrer], dashboard_path)
+    session[:referrer] = nil
+    redirect_to path
+  </code></pre>
+  <p>
+    To be honest, I'm not entirely thrilled with this and feel like it can be done cleaner. My strategy was to save the result of the redirect_path method into a variable 'path.' That then allowed me to manually set the session[:referrer] back to nil and still send the user to the path that had been stored there.
+  </p>
+  <p>
+    There's a lot I'd like to improve here. The variable name I chose, for example, still doesn't sit well with me. Session[:referrer] seems like it would regularly be saving the referrer path, but I only do it in specific situations. I'm also assuming a user will behave linearly and go log in or create an account after an incomplete checkout attempt, but what if they don't create an account until hours or days later? Do I still want to redirect them back to the checkout page or should there be a timeout function where after a certain amount of time the saved redirect expires. As it's written, no matter how much time passes they'll be redirected to their cart as long as their session/cookies hasn't been cleared.
+  </p>
+  <p>
+    While it can be embarrasing to make programming choices that seem odd or unnecessary, such as ealier with my beloved module, it's fun to be at a point in programming where I am comfortable experimenting. Sure, someone could have just told me to put a redirect helper method in the application controller, and I might spend too much time reinventing the wheel, but it was a lot more valuable to figure it all out on my own and watching my code simplify and evolve with each iteration.
+  </p>
+  <p>
+    Want to teach me the proper way to redirect? Have at it, I can always use the advice: jecrockett@gmail.com.
+  </p>
+</div>
